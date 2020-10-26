@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+    knot-resolver:
+        build: ./kresd
+        cap_add:
+            - NET_BIND_SERVICE  # required by kresd to bind
+            - SETPCAP           # required by tini to spawn kresd
+        cap_drop:
+            - ALL
+        ports:
+            - 0.0.0.0:53:53/tcp
+            - 0.0.0.0:53:53/udp
+        stdin_open: true
+        tmpfs:
+            - '/tmp'
+        tty: true
+        volumes:
+            - './kresd.conf:/etc/knot-resolver/kresd.conf:ro'
+
